@@ -5,7 +5,8 @@
  */
 template <class T>
 class binaryTree {
-	
+
+    //internal node container
 	struct node {
     T val;
     node *rightNode;
@@ -17,15 +18,15 @@ class binaryTree {
         binaryTree() : root(nullptr){};
         ~binaryTree() {destroyTree();}
 
-        void insert(T val) {insert(val, root);}
-        void destroyTree();
-        T* search(T val);
+        void insert(const T &val) {insert(val, &root);}
+        void destroyTree() {destroy(root);}
+        T* find(const T &val);
         
         bool isEmpty() {return ( (root==nullptr) ? true:false);}
         
     private:
-        void destroy(T *treeNode);
-        void insert(T val, node *ptr);
+        void destroy(node *treeNode);
+        void insert(const T &val, node **ptr);
 
     private:
         node *root;
@@ -35,48 +36,33 @@ class binaryTree {
  *
  */
 template <class T>
-void binaryTree<T>::insert(T val, node *ptr) {
-	
-	
-	if( isEmpty() )
-		root = new node(val);
-		
-	else if (ptr->leftNode == nullptr) {
-		ptr->leftNode = new node(val);
-	}
-	
-	else if (ptr->rightNode == nullptr){
-		ptr->rightNode = new node(val);
-	}
+void binaryTree<T>::insert(const T &val, node **ptr) {
 
-}
-
-/* Destroy Tree
- *
- *
- */
-template <class T>
-void binaryTree<T>::destroyTree() {
-    if(root == nullptr)
+	if(*ptr == nullptr) {
+		*ptr = new node(val);
         return;
-
-    delete(root->rightNode);
-    delete(root->leftNode);
+    }
+    if(val < (*ptr)->val)
+        insert(val, &((*ptr)->leftNode));
+    else
+        insert(val, &((*ptr)->rightNode));
 }
 
 template <class T>
-void binaryTree<T>::destroy(T *node) {
-    if(node == nullptr)
+void binaryTree<T>::destroy(node *nodePtr) {
+    if(nodePtr == nullptr)
         return;
 
-    destroy(node->rightNode);
-    destroy(node->leftNode);
+    destroy(nodePtr->rightNode);
+    destroy(nodePtr->leftNode);
+
+    delete nodePtr;
 }
 
 /* Search
  *
  */
 template <class T>
-T* binaryTree<T>::search(T val) {
+T* binaryTree<T>::find(const T &val) {
 
 }
