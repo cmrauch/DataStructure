@@ -5,60 +5,59 @@
  */
 template <class T>
 class binaryTree {
-
-    public:
-        binaryTree();
-        ~binaryTree();
-
-        void insert(T val);
-        void destroyTree();
-        void delete(T* node);
-        T* search(T val);
-
-    private:
-        T *root;
-};
-
-/* Node Container
- *
- * Description
- *     A container to hold each node in the binary tree
- */
-template <class T>
-struct node {
+	
+	struct node {
     T val;
     node *rightNode;
-    node *leftNode;
+    node *leftNode;  
+    node(T rVal): val(rVal), rightNode(nullptr), leftNode(nullptr){} 
+    };
+
+    public:
+        binaryTree() : root(nullptr){};
+        ~binaryTree() {destroyTree();}
+
+        void insert(T val) {insert(val, root);}
+        void destroyTree();
+        T* search(T val);
+        
+        bool isEmpty() {return ( (root==nullptr) ? true:false);}
+        
+    private:
+        void destroy(T *treeNode);
+        void insert(T val, node *ptr);
+
+    private:
+        node *root;
 };
 
-/* Constructor
+/* Insert
  *
  */
 template <class T>
-binaryTree::binaryTree() {
-    this->root = nullptr;
-}
+void binaryTree<T>::insert(T val, node *ptr) {
+	
+	
+	if( isEmpty() )
+		root = new node(val);
+		
+	else if (ptr->leftNode == nullptr) {
+		ptr->leftNode = new node(val);
+	}
+	
+	else if (ptr->rightNode == nullptr){
+		ptr->rightNode = new node(val);
+	}
 
-/* Destructor
- *
- */
-template <class T>
-binaryTree::~binaryTree() {
-     destroyTree();
- }
-
-/* Insert 
- *
- */
-void binaryTree::insert(T val) {
-    
 }
 
 /* Destroy Tree
  *
+ *
  */
-void binaryTree::destroyTree() {
-    if(root == nullptr) 
+template <class T>
+void binaryTree<T>::destroyTree() {
+    if(root == nullptr)
         return;
 
     delete(root->rightNode);
@@ -66,17 +65,18 @@ void binaryTree::destroyTree() {
 }
 
 template <class T>
-void delete(T *node) {
+void binaryTree<T>::destroy(T *node) {
     if(node == nullptr)
-        returm;
-        
-    delete(node->rightNode);
-    delete(node->leftNode);
+        return;
+
+    destroy(node->rightNode);
+    destroy(node->leftNode);
 }
 
 /* Search
  *
  */
-T* binaryTree::search(T val) {
-    
+template <class T>
+T* binaryTree<T>::search(T val) {
+
 }
