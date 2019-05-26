@@ -1,2 +1,3 @@
-# DataStructure
+# DataStructures
 - binaryTree
+- LinkedList
