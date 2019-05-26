@@ -6,7 +6,7 @@
 #ifndef BINARYTREE
  #define BINARYTREE
  #include <iostream>
- using namespace std;
+ 
  
 template <class T>
 class binaryTree {
@@ -86,7 +86,7 @@ void binaryTree<T>::inOrderDisplay(node *root) const {
         return;
         
     inOrderDisplay(root->leftNode);
-    cout << root->val << " ";
+    std::cout << root->val << " ";
     inOrderDisplay(root->rightNode);    
 }
 
@@ -105,26 +105,29 @@ class LinkedList {
 
     public:
         LinkedList() : head(nullptr), tail(nullptr), size(0) {}
-        LinkedList(const LinkedList &rhs);//
+        LinkedList(const LinkedList &rhs);
         ~LinkedList() {destroyList();}
 
-        void destroyList() {destroy(head);}
+        void destroyList();
 
         T get_front() {return head->val;}
         T get_back() {return tail->val;}
-        void pop_front();//
-        void pop_back();//
-        void push_front(const T &rVal);//
-        void push_back(const T &rVal);//
-
-        bool remove(const T &target);//
-        bool removeAll(const T &target);//
-        void swap(T lhs, T rhs);
+        T get_index(int index);
+        void pop_front();
+        void pop_back();
+        void pop_index(int index);//EDIT
+        void push_front(const T &rVal);
+        void push_back(const T &rVal);
+        bool push_index(const T &rVal, int index);
+        
+        int getSize() {return size;}
+        int getIndex(const T &val);//TODO
+        
+        bool remove(const T &target);
+        bool removeAll(const T &target);
+        void swap(T lhs, T rhs);//TODO
         bool isEmpty() {return ((size == 0) ? true:false);}
         node* getHead() {return head;} 
-
-    private:
-        void destroy(node *nodePtr);
 
     private:
         node *head;
@@ -270,8 +273,53 @@ bool LinkedList<T>::remove(const T &target) {
  * removes every target element
  */
 template <class T>
-bool LinkedList::removeAll(const T &target) {
-    while(remove(target));
+bool LinkedList<T>::removeAll(const T &target) {
+    bool isRemoved = false;
+    while(remove(target))
+        isRemoved = true;
+    return isRemoved;
+}
+
+/* destroyList
+ *
+ * deletes the entire list
+ */
+template <class T>
+void LinkedList<T>::destroyList() {
+    while(size != 0)
+        push_front();
+}
+
+/* insert
+ *
+ * insert an element into a given, zero based index
+ */
+template <class T>
+bool LinkedList<T>::push_index(const T &rVal, int index) {
+    if(index >= size)
+        return false;
+    if(index == 0)
+        push_front();
+    if(index == size)
+        push_back();
+        
+    node *temp = head;
+    for( ; index != 1; temp = temp->next, --index);
+    node *ptr = temp->next;
+    temp->next = new node(rVal);
+    temp->next->next = ptr;
+
     return true;
+}
+
+/* retrieve
+ * 
+ */
+template <class T>
+void LinkedList<T>::pop_index(int index) {
+    node *temp = head;
+    for( ; index != 0; temp = temp->next);
+    
+    //return temp->next;
 }
 #endif
