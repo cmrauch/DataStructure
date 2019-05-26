@@ -115,7 +115,7 @@ class LinkedList {
         T get_index(int index);
         void pop_front();
         void pop_back();
-        void pop_index(int index);//EDIT
+        bool pop_index(int index);//EDIT
         void push_front(const T &rVal);
         void push_back(const T &rVal);
         bool push_index(const T &rVal, int index);
@@ -242,14 +242,14 @@ void LinkedList<T>::pop_back() {
  */
 template <class T>
 bool LinkedList<T>::remove(const T &target) {
-    node *temp1 = head;
-    node *temp2 = head->next;
-
     //check the head
-    if(head == target) {
+    if(head->val == target) {
         pop_front();
         return true;
     }
+
+    node *temp1 = head;
+    node *temp2 = head->next;
         
     //search for the element
     for( ; temp2 != nullptr; temp1 = temp1->next, temp2 = temp2->next) 
@@ -265,6 +265,7 @@ bool LinkedList<T>::remove(const T &target) {
         temp1->next = temp2->next;
         delete temp2;
         --size;
+        return true;
     }
 }
 
@@ -287,7 +288,7 @@ bool LinkedList<T>::removeAll(const T &target) {
 template <class T>
 void LinkedList<T>::destroyList() {
     while(size != 0)
-        push_front();
+        pop_front();
 }
 
 /* insert
@@ -296,30 +297,62 @@ void LinkedList<T>::destroyList() {
  */
 template <class T>
 bool LinkedList<T>::push_index(const T &rVal, int index) {
-    if(index >= size)
+    //check out of range index
+    if(index >= size) 
         return false;
-    if(index == 0)
-        push_front();
-    if(index == size)
-        push_back();
+    //check for front of list
+    if(index == 0) {
+        push_front(rVal);
+        return true;
+    }
+    //check for back of list
+    if(index == size) {
+        push_back(rVal);
+        return true;
+    }
         
     node *temp = head;
     for( ; index != 1; temp = temp->next, --index);
     node *ptr = temp->next;
     temp->next = new node(rVal);
     temp->next->next = ptr;
-
+    ++size;
+    
     return true;
+}
+/* get_index
+ *
+ */
+template <class T>
+T LinkedList<T>::get_index(int index) {
+    node *temp = head;
+    for( int x = 0; index != x; ++x, temp = temp->next);
+
+    return temp->val;
 }
 
 /* retrieve
  * 
  */
 template <class T>
-void LinkedList<T>::pop_index(int index) {
-    node *temp = head;
-    for( ; index != 0; temp = temp->next);
+bool LinkedList<T>::pop_index(int index) {
+    //check out of range index
+    if(index >= size) 
+        return false;
+    //check for front of list
+    if(index == 0) 
+        pop_front();
+    //check for back of list
+    if(index == size) 
+        pop_back();
     
-    //return temp->next;
+    node *temp1 = head;
+    node *temp2 = head->next;
+    for( int x = 1; index != x; ++x, temp2 = temp2->next);
+
+    temp1->next = temp2->next;
+    delete temp2;
+    --size;
+    return true;    
 }
 #endif
