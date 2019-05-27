@@ -291,7 +291,7 @@ void LinkedList<T>::destroyList() {
         pop_front();
 }
 
-/* insert
+/* push_index
  *
  * insert an element into a given, zero based index
  */
@@ -331,7 +331,7 @@ T LinkedList<T>::get_index(int index) {
     return temp->val;
 }
 
-/* retrieve
+/* pop_index
  * 
  */
 template <class T>
@@ -354,5 +354,87 @@ bool LinkedList<T>::pop_index(int index) {
     delete temp2;
     --size;
     return true;    
+}
+#endif
+
+/* Queue Class
+ *
+ * uses a circular buffer implementation
+ * increases array size to avoid overwriting
+ */
+#ifndef QUEUE
+#define QUEUE
+
+template <class T>
+class Queue {
+    public:
+        Queue() : front(0), back(0), size(0) {}
+        void push(const T &element);
+        T pop();
+        bool isEmpty();
+
+    private:
+        void incrementQueueSize();
+    private:
+        size_t STARTING_SIZE = 1024;
+        T *circularQueue = new T[STARTING_SIZE];
+        size_t front;
+        size_t back;
+        size_t size; //the number of elements in the array
+};
+
+
+template <class T>
+void Queue<T>::push(const T &elem) {
+    //check for overwriting
+    if((back+1) % STARTING_SIZE == front)
+        incrementQueueSize();
+    //add element
+    back = (++back % STARTING_SIZE);
+    circularQueue[back] = elem;
+    ++size;
+}
+
+/* pop
+ *
+ * output - returns the front element in the queue
+ *       - deletes the front element
+ */
+template <class T>
+T Queue<T>::pop() {
+    size_t x = front;
+    front = (++front % STARTING_SIZE);
+    return circularQueue[x];
+}
+
+/* isEmpty
+ *
+ * output - returns true if empty, otherwise return false
+ */
+template <class T>
+bool Queue<T>::isEmpty() {
+    if(size == 0)
+        return true;
+    else
+        return false;
+}
+
+/* incrementQueueSize
+ *
+ * output - copies arr1 into arr2 and doubles the size
+ *       - front is set to 0
+ */
+template <class T>
+void Queue<T>::incrementQueueSize() {
+    //create a new array and double the size
+    T newArr = new T[(this->size * 2)];
+    //copy it over
+    for(size_t x = 0; x < this->size; ++x, front = (++front % size))
+        newArr[x] = circularQueue[front];
+    delete[] circularQueue;
+    circularQueue = newArr;
+    front = 0;
+    back = (size-1);
+    STARTING_SIZE *= 2;
 }
 #endif
