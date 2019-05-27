@@ -4,8 +4,8 @@
  *     Maintains a binary tree. Uses template types
  */
 #ifndef BINARYTREE
- #define BINARYTREE
- #include <iostream>
+#define BINARYTREE
+#include <iostream>
  
  
 template <class T>
