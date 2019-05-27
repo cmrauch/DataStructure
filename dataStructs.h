@@ -371,7 +371,8 @@ class Queue {
         Queue() : front(0), back(0), size(0) {}
         void push(const T &element);
         T pop();
-        bool isEmpty();
+        bool isEmpty() {return (size==0) ? true:false}
+        size_t size() {return size;}
 
     private:
         void incrementQueueSize();
@@ -405,18 +406,6 @@ T Queue<T>::pop() {
     size_t x = front;
     front = (++front % STARTING_SIZE);
     return circularQueue[x];
-}
-
-/* isEmpty
- *
- * output - returns true if empty, otherwise return false
- */
-template <class T>
-bool Queue<T>::isEmpty() {
-    if(size == 0)
-        return true;
-    else
-        return false;
 }
 
 /* incrementQueueSize
